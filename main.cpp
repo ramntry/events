@@ -19,6 +19,8 @@ int main()
         std::endl;
     }
 
+    two_cars.front()->wheels()[2]->punch();
+
     delete two_cars.front();
     delete two_cars.back();
 }

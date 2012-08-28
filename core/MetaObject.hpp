@@ -1,4 +1,5 @@
 #pragma once
+#include <typeinfo>
 
 namespace core {
 
@@ -8,5 +9,11 @@ public:
     virtual ~MetaObject() {}
     const char *typeName() const;
 };
+
+template <typename T>
+const char *typeName()
+{
+    return typeid(T).name();
+}
 
 }  // namespace core

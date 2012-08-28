@@ -10,17 +10,17 @@ Car::Car(core::Object *parent, int power_of_engine)
 {
 }
 
-int Car::numberOfWheels()
-{
-    return wheels_.size();
-}
-
-int Car::powerOfEngine()
+int Car::powerOfEngine() const
 {
     return engine_->power();
 }
 
+int Car::numberOfWheels() const
+{
+    return wheels_.size();
+}
+
 void Car::addWheel(int diameter)
 {
-    wheels_.push_back(new Wheel(this, diameter));
+    wheels_.push_back(new Wheel(this, numberOfWheels(), diameter));
 }

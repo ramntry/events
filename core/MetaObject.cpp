@@ -1,4 +1,3 @@
-#include <typeinfo>
 #include "MetaObject.hpp"
 
 using core::MetaObject;

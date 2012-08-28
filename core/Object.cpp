@@ -1,6 +1,7 @@
 #include "Object.hpp"
 
 using core::Object;
+using core::Event;
 
 Object::Object(Object *parent)
     : parent_(parent)
@@ -14,6 +15,7 @@ Object::Object(Object *parent)
 Object::~Object()
 {
     deleteChildren();
+    deleteHandlers();
 }
 
 void Object::addChild(Object const *child)
@@ -30,4 +32,36 @@ void Object::deleteChildren()
         delete *it;
     }
     children_.clear();
+}
+
+void Object::deleteHandlers()
+{
+    EventHandlers::iterator it = handlers_.begin();
+    EventHandlers::iterator end = handlers_.end();
+    for (; it != end; ++it)
+    {
+        delete it->second;
+    }
+    handlers_.clear();
+}
+
+void Object::send(Event const &event)
+{
+    Event::iterator it = event.begin();
+    Event::iterator end = event.end();
+    EventHandlers::const_iterator not_found_it = handlers_.end();
+    for (; it != end; ++it)
+    {
+        EventHandlers::const_iterator find_it = handlers_.find(*it);
+        if (find_it != not_found_it)
+        {
+            (*find_it->second)(event);
+            return;
+        }
+    }
+
+    if (parent_ != 0)
+    {
+        parent_->send(event);
+    }
 }

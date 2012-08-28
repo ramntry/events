@@ -11,8 +11,9 @@ public:
     typedef std::vector<parts::Wheel *> Wheels;
 
     Car(Object *parent, int power_of_engine);
-    int numberOfWheels();
-    int powerOfEngine();
+    int powerOfEngine() const;
+    int numberOfWheels() const;
+    Wheels &wheels() { return wheels_; }
 
 protected:
     void addWheel(int diameter);
