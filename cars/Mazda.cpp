@@ -12,7 +12,7 @@ Mazda::Mazda(Object *parent)
     {
         addWheel(20);
     }
-    addHandler<Wheel::WheelPuncturedEvent, WheelPuncturedHandler>();
+    bind<Wheel::WheelPuncturedEvent, WheelPuncturedHandler>();
 }
 
 void Mazda::WheelPuncturedHandler::operator ()(core::Event const &event)

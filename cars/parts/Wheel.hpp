@@ -6,29 +6,18 @@ namespace cars { namespace parts {
 class Wheel : public core::Object
 {
 public:
-    class WheelEvent;
-    class WheelPuncturedEvent;
+    EVENT_DECL(WheelEvent, core::Event);
+    EVENT_DECL(WheelPuncturedEvent, WheelEvent);
 
     Wheel(Object *parent, int id, int diameter);
-    int diameter() { return diameter_; }
     int id() { return id_; }
+    int diameter() { return diameter_; }
+
     void punch();
 
 protected:
     int id_;
     int diameter_;
-};
-
-class Wheel::WheelEvent : public core::Event
-{
-public:
-    WheelEvent(core::Object *sender) : Event(sender) { push(); }
-};
-
-class Wheel::WheelPuncturedEvent : public Wheel::WheelEvent
-{
-public:
-    WheelPuncturedEvent(core::Object *sender) : WheelEvent(sender) { push(); }
 };
 
 }}  // namespace cars::parts

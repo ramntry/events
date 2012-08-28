@@ -13,6 +13,7 @@ public:
     typedef EventHierarchy::const_iterator iterator;
 
     Event(Object *sender);
+
     template <typename S>
     S *sender() const;
 
@@ -29,6 +30,13 @@ template <typename S>
 S *Event::sender() const
 {
     return dynamic_cast<S *>(sender_);
+}
+
+#define EVENT_DECL(name, base) \
+class name : public base \
+{ \
+public: \
+    name(core::Object *sender) : base(sender) { push(); } \
 }
 
 }  // namespace core

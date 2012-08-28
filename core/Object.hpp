@@ -10,22 +10,23 @@ namespace core {
 class Object : public MetaObject
 {
 public:
-    typedef std::list<Object const *> ChildrenList;
     struct EventHandler;
     typedef std::map<std::string, EventHandler *> EventHandlers;
+    typedef std::list<Object const *> ChildrenList;
 
     Object(Object *parent);
     virtual ~Object();
 
-    Object *parent() { return parent_; }
+    Object *parent() const { return parent_; }
 
 protected:
     void addChild(Object const *child);
     void deleteChildren();
     void deleteHandlers();
-    void send(Event const &event);
+
     template <typename E, typename H>
-    void addHandler();
+    void bind();
+    void send(Event const &event);
 
     Object *parent_;
     ChildrenList children_;
@@ -37,8 +38,14 @@ struct Object::EventHandler
     virtual void operator ()(Event const &event) = 0;
 };
 
+#define HANDLER_DECL(name) \
+struct name : public core::Object::EventHandler \
+{ \
+    virtual void operator ()(core::Event const &event); \
+}
+
 template <typename E, typename H>
-void Object::addHandler()
+void Object::bind()
 {
     handlers_[core::typeName<E>()] = new H;
 }
