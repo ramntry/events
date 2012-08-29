@@ -1,7 +1,10 @@
+#include <stdexcept>
+#include <core/EventQueue.hpp>
 #include "Object.hpp"
 
 using core::Object;
 using core::Event;
+using core::EventQueue;
 
 Object::Object(Object *parent)
     : parent_(parent)
@@ -10,6 +13,16 @@ Object::Object(Object *parent)
     {
         parent_->addChild(this);
     }
+}
+
+Object::Object(core::Object const &)
+{
+    throw std::runtime_error("Copy constructor of Object is not implemented yet");
+}
+
+core::Object &Object::operator =(core::Object const &)
+{
+    throw std::runtime_error("Asign operator for Object is not implemented yet");
 }
 
 Object::~Object()
@@ -69,6 +82,11 @@ void Object::send(const core::Event &event)
     {
         parent_->send(event);
     }
+}
+
+void Object::post(const core::Event &event)
+{
+    EventQueue::getInstance()->enque(event);
 }
 
 void Object::processChainOfHandlers(Object::ChainOfHandlers &chain, core::Event const &event)

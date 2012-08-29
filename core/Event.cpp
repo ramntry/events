@@ -1,3 +1,4 @@
+#include <core/Object.hpp>
 #include "Event.hpp"
 
 using core::Event;
@@ -21,4 +22,9 @@ Event::iterator Event::begin() const
 Event::iterator Event::end() const
 {
     return hierarchy_.end();
+}
+
+void Event::process()
+{
+    sender_->send(*this);
 }

@@ -13,7 +13,7 @@ public:
     int id() { return id_; }
     int diameter() { return diameter_; }
 
-    void punch();
+    void punch(bool non_blocking = false);
 
 protected:
     int id_;

@@ -18,9 +18,13 @@ public:
     typedef std::list<Object const *> ChildrenList;
 
     Object(Object *parent);
+    Object(Object const &src);
+    Object &operator =(Object const &src);
     virtual ~Object();
 
     Object *parent() const { return parent_; }
+    void send(Event const &event);
+    void post(Event const &event);
 
 protected:
     void addChild(Object const *child);
@@ -32,7 +36,6 @@ protected:
     template <typename E, typename H> void pushPostHandler(ContinuationPolicy policy = ByHandler);
     template <typename E> void popPreHandler();
     template <typename E> void popPostHandler();
-    void send(Event const &event);
     void processChainOfHandlers(ChainOfHandlers &chain, Event const &event);
 
     Object *parent_;

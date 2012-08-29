@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     cars/Mazda.cpp \
     core/Event.cpp \
     core/MetaObject.cpp \
-    cars/Truck.cpp
+    cars/Truck.cpp \
+    core/EventQueue.cpp
 
 HEADERS += \
     core/Object.hpp \
@@ -23,5 +24,6 @@ HEADERS += \
     cars/Mazda.hpp \
     core/Event.hpp \
     core/MetaObject.hpp \
-    cars/Truck.hpp
+    cars/Truck.hpp \
+    core/EventQueue.hpp
 

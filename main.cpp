@@ -1,7 +1,27 @@
 #include <iostream>
 #include <vector>
+#include <core/EventQueue.hpp>
 #include <cars/Mazda.hpp>
 #include <cars/Truck.hpp>
+
+void eventHandlingTest(cars::Mazda *mazda, bool non_blocking)
+{
+    mazda->wheels()[1]->punch(non_blocking);
+
+    std::cout << "\nEnable low wheel events detalisation mode:" << std::endl;
+    mazda->enableLowWheelEventsDetalisationMode();
+    mazda->wheels()[2]->punch(non_blocking);
+
+    std::cout << "\nAdd beep-beep handler:" << std::endl;
+    mazda->enableBeepBeepWhenWheelEvent();
+    mazda->wheels()[3]->punch(non_blocking);
+
+    if (non_blocking)
+    {
+        std::cout << "\nprocess all events:\n" << std::endl;
+        core::EventQueue::getInstance()->processAllEvents();
+    }
+}
 
 int main()
 {
@@ -19,15 +39,13 @@ int main()
         std::endl;
     }
 
-    two_cars.front()->wheels()[1]->punch();
+    cars::Mazda *mazda = dynamic_cast<cars::Mazda *>(two_cars.front());
 
-    std::cout << "\nEnable low wheel events detalisation mode:" << std::endl;
-    dynamic_cast<cars::Mazda *>(two_cars.front())->enableLowWheelEventsDetalisationMode();
-    two_cars.front()->wheels()[2]->punch();
+    std::cout << "\n\n=== Blocking test of event handling ===\n" << std::endl;
+    eventHandlingTest(mazda, false);
 
-    std::cout << "\nAdd beep-beep handler:" << std::endl;
-    dynamic_cast<cars::Mazda *>(two_cars.front())->enableBeepBeepWhenWheelEvent();
-    two_cars.front()->wheels()[3]->punch();
+    std::cout << "\n\n=== Non-blocking test of event handling ===\n" << std::endl;
+    eventHandlingTest(mazda, true);
 
     delete two_cars.front();
     delete two_cars.back();

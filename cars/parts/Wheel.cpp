@@ -10,7 +10,13 @@ Wheel::Wheel(core::Object *parent, int id, int diameter)
 {
 }
 
-void Wheel::punch()
+void Wheel::punch(bool non_blocking)
 {
-    send(WheelPuncturedEvent(this));
+    if (non_blocking)
+    {
+        post(WheelPuncturedEvent(this));
+    } else
+    {
+        send(WheelPuncturedEvent(this));
+    }
 }

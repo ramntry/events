@@ -7,6 +7,8 @@ using core::Event;
 
 Mazda::Mazda(Object *parent)
     : Car(parent, 200)
+    , low_wheel_events_detalisation_mode_is_enabled_(false)
+    , beep_beep_when_wheel_event_(false)
 {
     for (int i = 0; i < 4; ++i)
     {
@@ -18,12 +20,23 @@ Mazda::Mazda(Object *parent)
 
 void Mazda::enableLowWheelEventsDetalisationMode()
 {
+    if (low_wheel_events_detalisation_mode_is_enabled_)
+    {
+        std::cout << "Mazda: Low wheel events detalisation mode is already enabled! Do nothing" << std::endl;
+        return;
+    }
     popPreHandler<Wheel::WheelPuncturedEvent>();
+    low_wheel_events_detalisation_mode_is_enabled_ = true;
 }
 
 void Mazda::enableBeepBeepWhenWheelEvent()
 {
+    if (beep_beep_when_wheel_event_)
+    {
+        std::cout << "Mazda: Already beep-beep when wheel event! Well, do it twice (or even more!)" << std::endl;
+    }
     pushPostHandler<Wheel::WheelEvent, BeepBeepHandler>();
+    beep_beep_when_wheel_event_ = true;
 }
 
 bool Mazda::WheelHandler::operator ()(core::Event const &event)

@@ -17,11 +17,14 @@ public:
     template <typename S>
     S *sender() const;
 
-    void push();
+    void process();
+
     iterator begin() const;
     iterator end() const;
 
 protected:
+    void push();
+
     EventHierarchy hierarchy_;
     Object *sender_;
 };
