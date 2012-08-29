@@ -8,6 +8,7 @@ using core::EventQueue;
 
 Object::Object(Object *parent)
     : parent_(parent)
+    , valid_iterator_(EventQueue::untrackedIterator())
 {
     if (parent_ != 0)
     {
@@ -33,6 +34,7 @@ Object::~Object()
     }
     deleteChildren();
     deleteHandlers();
+    EventQueue::excludeFromValid(valid_iterator_);
 }
 
 Object::ChildIterator Object::addChild(Object const *child)
@@ -91,7 +93,7 @@ void Object::send(const core::Event &event)
 
 void Object::post(const core::Event &event)
 {
-    EventQueue::getInstance()->enque(event);
+    valid_iterator_ = EventQueue::getInstance()->enque(event, valid_iterator_);
 }
 
 void Object::processChainOfHandlers(Object::ChainOfHandlers &chain, core::Event const &event)

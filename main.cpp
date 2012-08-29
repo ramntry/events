@@ -50,6 +50,9 @@ int main()
     delete mazda->wheels()[0];
     delete two_cars.back()->wheels()[4];
 
+    mazda->wheels()[1]->punch(true);
     delete two_cars.front();
+    core::EventQueue::getInstance()->processAllEvents();
+
     delete two_cars.back();
 }

@@ -5,6 +5,7 @@
 #include <string>
 #include <core/MetaObject.hpp>
 #include <core/Event.hpp>
+#include <core/EventQueue.hpp>
 
 namespace core {
 
@@ -43,6 +44,7 @@ protected:
     ChildIterator me_in_childrenlist_;
     ChildrenList children_;
     EventHandlers handlers_;
+    EventQueue::ValidIterator valid_iterator_;
 };
 
 struct Object::EventHandler
