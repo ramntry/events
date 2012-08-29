@@ -47,6 +47,9 @@ int main()
     std::cout << "\n\n=== Non-blocking test of event handling ===\n" << std::endl;
     eventHandlingTest(mazda, true);
 
+    delete mazda->wheels()[0];
+    delete two_cars.back()->wheels()[4];
+
     delete two_cars.front();
     delete two_cars.back();
 }

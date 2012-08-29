@@ -16,6 +16,7 @@ public:
     typedef std::deque<std::pair<EventHandler *, ContinuationPolicy> > ChainOfHandlers;
     typedef std::map<std::string, ChainOfHandlers> EventHandlers;
     typedef std::list<Object const *> ChildrenList;
+    typedef ChildrenList::iterator ChildIterator;
 
     Object(Object *parent);
     Object(Object const &src);
@@ -27,7 +28,7 @@ public:
     void post(Event const &event);
 
 protected:
-    void addChild(Object const *child);
+    ChildIterator addChild(Object const *child);
     void deleteChildren();
     void deleteHandlers();
 
@@ -38,7 +39,8 @@ protected:
     template <typename E> void popPostHandler();
     void processChainOfHandlers(ChainOfHandlers &chain, Event const &event);
 
-    Object *parent_;
+    mutable Object *parent_;
+    ChildIterator me_in_childrenlist_;
     ChildrenList children_;
     EventHandlers handlers_;
 };

@@ -11,7 +11,7 @@ Object::Object(Object *parent)
 {
     if (parent_ != 0)
     {
-        parent_->addChild(this);
+        me_in_childrenlist_ = parent_->addChild(this);
     }
 }
 
@@ -27,21 +27,26 @@ core::Object &Object::operator =(core::Object const &)
 
 Object::~Object()
 {
+    if (parent_ != 0)
+    {
+        parent_->children_.erase(me_in_childrenlist_);
+    }
     deleteChildren();
     deleteHandlers();
 }
 
-void Object::addChild(Object const *child)
+Object::ChildIterator Object::addChild(Object const *child)
 {
-    children_.push_back(child);
+    return children_.insert(children_.begin(), child);
 }
 
 void Object::deleteChildren()
 {
-    ChildrenList::iterator it = children_.begin();
-    ChildrenList::iterator end = children_.end();
+    ChildIterator it = children_.begin();
+    ChildIterator end = children_.end();
     for (; it != end; ++it)
     {
+        (*it)->parent_ = 0;
         delete *it;
     }
     children_.clear();
