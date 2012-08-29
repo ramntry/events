@@ -12,10 +12,11 @@ Mazda::Mazda(Object *parent)
     {
         addWheel(20);
     }
-    bind<Wheel::WheelPuncturedEvent, WheelPuncturedHandler>();
+    pushPreHandler<Wheel::WheelPuncturedEvent, WheelPuncturedHandler>();
 }
 
-void Mazda::WheelPuncturedHandler::operator ()(core::Event const &event)
+bool Mazda::WheelPuncturedHandler::operator ()(core::Event const &event)
 {
     std::cout << "Mazda: Wheel #" << event.sender<Wheel>()->id() << " was punctured!" << std::endl;
+    return true;
 }

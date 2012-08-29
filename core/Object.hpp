@@ -33,6 +33,7 @@ protected:
     template <typename E> void popPreHandler();
     template <typename E> void popPostHandler();
     void send(Event const &event);
+    void processChainOfHandlers(ChainOfHandlers &chain, Event const &event);
 
     Object *parent_;
     ChildrenList children_;

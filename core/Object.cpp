@@ -50,17 +50,17 @@ void Object::deleteHandlers()
     handlers_.clear();
 }
 
-void Object::send(Event const &event)
+void Object::send(const core::Event &event)
 {
     Event::iterator it = event.begin();
     Event::iterator end = event.end();
-    EventHandlers::const_iterator not_found_it = handlers_.end();
+    EventHandlers::iterator not_found_it = handlers_.end();
     for (; it != end; ++it)
     {
-        EventHandlers::const_iterator find_it = handlers_.find(*it);
+        EventHandlers::iterator find_it = handlers_.find(*it);
         if (find_it != not_found_it)
         {
-            (*find_it->second)(event);
+            processChainOfHandlers(find_it->second, event);
             return;
         }
     }
@@ -68,5 +68,19 @@ void Object::send(Event const &event)
     if (parent_ != 0)
     {
         parent_->send(event);
+    }
+}
+
+void Object::processChainOfHandlers(Object::ChainOfHandlers &chain, core::Event const &event)
+{
+    ChainOfHandlers::iterator it = chain.begin();
+    ChainOfHandlers::iterator end = chain.end();
+    for (; it != end; ++it)
+    {
+        bool continuation_ret = (*it->first)(event);
+        if (it->second == ForceBreak || (it->second == ByHandler && !continuation_ret))
+        {
+            break;
+        }
     }
 }
