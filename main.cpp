@@ -19,7 +19,15 @@ int main()
         std::endl;
     }
 
+    two_cars.front()->wheels()[1]->punch();
+
+    std::cout << "\nEnable low wheel events detalisation mode:" << std::endl;
+    dynamic_cast<cars::Mazda *>(two_cars.front())->enableLowWheelEventsDetalisationMode();
     two_cars.front()->wheels()[2]->punch();
+
+    std::cout << "\nAdd beep-beep handler:" << std::endl;
+    dynamic_cast<cars::Mazda *>(two_cars.front())->enableBeepBeepWhenWheelEvent();
+    two_cars.front()->wheels()[3]->punch();
 
     delete two_cars.front();
     delete two_cars.back();

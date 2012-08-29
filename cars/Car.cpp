@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Car.hpp"
 
 using cars::Car;
@@ -23,4 +24,10 @@ int Car::numberOfWheels() const
 void Car::addWheel(int diameter)
 {
     wheels_.push_back(new Wheel(this, numberOfWheels(), diameter));
+}
+
+bool Car::BeepBeepHandler::operator ()(core::Event const &event)
+{
+    std::cout << event.sender<Object>()->parent()->typeName() << ": beep-beep!" << std::endl;
+    return true;
 }

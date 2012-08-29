@@ -15,6 +15,8 @@ public:
     int numberOfWheels() const;
     Wheels &wheels() { return wheels_; }
 
+    HANDLER_DECL(BeepBeepHandler);
+
 protected:
     void addWheel(int diameter);
 

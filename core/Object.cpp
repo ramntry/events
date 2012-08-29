@@ -58,7 +58,7 @@ void Object::send(const core::Event &event)
     for (; it != end; ++it)
     {
         EventHandlers::iterator find_it = handlers_.find(*it);
-        if (find_it != not_found_it)
+        if (find_it != not_found_it && !find_it->second.empty())
         {
             processChainOfHandlers(find_it->second, event);
             return;

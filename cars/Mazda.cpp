@@ -13,6 +13,23 @@ Mazda::Mazda(Object *parent)
         addWheel(20);
     }
     pushPreHandler<Wheel::WheelPuncturedEvent, WheelPuncturedHandler>();
+    pushPreHandler<Wheel::WheelEvent, WheelHandler>();
+}
+
+void Mazda::enableLowWheelEventsDetalisationMode()
+{
+    popPreHandler<Wheel::WheelPuncturedEvent>();
+}
+
+void Mazda::enableBeepBeepWhenWheelEvent()
+{
+    pushPostHandler<Wheel::WheelEvent, BeepBeepHandler>();
+}
+
+bool Mazda::WheelHandler::operator ()(core::Event const &event)
+{
+    std::cout << "Mazda: something is wrong with wheel #" << event.sender<Wheel>()->id() << std::endl;
+    return true;
 }
 
 bool Mazda::WheelPuncturedHandler::operator ()(core::Event const &event)

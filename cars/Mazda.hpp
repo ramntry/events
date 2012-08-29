@@ -7,7 +7,10 @@ class Mazda : public Car
 {
 public:
     Mazda(Object *parent);
+    void enableLowWheelEventsDetalisationMode();
+    void enableBeepBeepWhenWheelEvent();
 
+    HANDLER_DECL(WheelHandler);
     HANDLER_DECL(WheelPuncturedHandler);
 };
 
