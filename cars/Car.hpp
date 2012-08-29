@@ -20,7 +20,7 @@ public:
 protected:
     void addWheel(int diameter);
 
-    parts::Engine *engine_;
+    parts::Engine engine_;
     Wheels wheels_;
 };
 

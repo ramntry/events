@@ -7,13 +7,13 @@ using cars::parts::Wheel;
 
 Car::Car(core::Object *parent, int power_of_engine)
     : Object(parent)
-    , engine_(new Engine(this, power_of_engine))
+    , engine_(this, power_of_engine)
 {
 }
 
 int Car::powerOfEngine() const
 {
-    return engine_->power();
+    return engine_.power();
 }
 
 int Car::numberOfWheels() const

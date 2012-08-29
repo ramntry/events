@@ -7,7 +7,7 @@ class Engine : public core::Object
 {
 public:
     Engine(Object *parent, int power);
-    int power() { return power_; }
+    int power() const { return power_; }
 
 private:
     int power_;
