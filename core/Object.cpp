@@ -40,7 +40,12 @@ void Object::deleteHandlers()
     EventHandlers::iterator end = handlers_.end();
     for (; it != end; ++it)
     {
-        delete it->second;
+        ChainOfHandlers::iterator sec_it = it->second.begin();
+        ChainOfHandlers::iterator sec_end = it->second.end();
+        for (; sec_it != sec_end; ++sec_it)
+        {
+            delete sec_it->first;
+        }
     }
     handlers_.clear();
 }

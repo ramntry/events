@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <deque>
 #include <map>
 #include <string>
 #include <core/MetaObject.hpp>
@@ -11,7 +12,9 @@ class Object : public MetaObject
 {
 public:
     struct EventHandler;
-    typedef std::map<std::string, EventHandler *> EventHandlers;
+    enum ContinuationPolicy { ByHandler = 0, ForceContinue, ForceBreak };
+    typedef std::deque<std::pair<EventHandler *, ContinuationPolicy> > ChainOfHandlers;
+    typedef std::map<std::string, ChainOfHandlers> EventHandlers;
     typedef std::list<Object const *> ChildrenList;
 
     Object(Object *parent);
@@ -24,8 +27,11 @@ protected:
     void deleteChildren();
     void deleteHandlers();
 
-    template <typename E, typename H>
-    void bind();
+    template <typename E> ChainOfHandlers &chainOfHandlers();
+    template <typename E, typename H> void pushPreHandler(ContinuationPolicy policy = ByHandler);
+    template <typename E, typename H> void pushPostHandler(ContinuationPolicy policy = ByHandler);
+    template <typename E> void popPreHandler();
+    template <typename E> void popPostHandler();
     void send(Event const &event);
 
     Object *parent_;
@@ -35,19 +41,47 @@ protected:
 
 struct Object::EventHandler
 {
-    virtual void operator ()(Event const &event) = 0;
+    virtual bool operator ()(Event const &event) = 0;
 };
 
 #define HANDLER_DECL(name) \
 struct name : public core::Object::EventHandler \
 { \
-    virtual void operator ()(core::Event const &event); \
+    virtual bool operator ()(core::Event const &event); \
+}
+
+template <typename E>
+Object::ChainOfHandlers &Object::chainOfHandlers()
+{
+    return handlers_[core::typeName<E>()];
 }
 
 template <typename E, typename H>
-void Object::bind()
+void Object::pushPreHandler(ContinuationPolicy policy)
 {
-    handlers_[core::typeName<E>()] = new H;
+    chainOfHandlers<E>().push_front(std::make_pair(new H, policy));
+}
+
+template <typename E, typename H>
+void Object::pushPostHandler(ContinuationPolicy policy)
+{
+    chainOfHandlers<E>().push_back(std::make_pair(new H, policy));
+}
+
+template <typename E>
+void Object::popPreHandler()
+{
+    ChainOfHandlers &chain = chainOfHandlers<E>();
+    delete chain.front().first;
+    chain.pop_front();
+}
+
+template <typename E>
+void Object::popPostHandler()
+{
+    ChainOfHandlers &chain = chainOfHandlers<E>();
+    delete chain.back().first;
+    chain.pop_back();
 }
 
 }  // namespace core
