@@ -1,9 +1,12 @@
 #pragma once
 #include <deque>
 #include <set>
-#include <core/Event.hpp>
+#include <core/MetaObject.hpp>
 
 namespace core {
+
+class Event;
+class Object;
 
 class EventQueue : public MetaObject
 {
@@ -17,12 +20,11 @@ public:
     static EventQueue *getInstance();
     static ValidIterator untrackedIterator();
     static void excludeFromValid(ValidIterator iterator);
-    ValidIterator enque(Event *event, ValidIterator position_assumption);
-    void processAllEvents();
-    void deleteAllEvents();
+    static ValidIterator enque(Event *event, ValidIterator position_assumption);
+    static void processAllEvents();
 
 protected:
-    EventQueue();
+    EventQueue() {}
 
     EventContainer events_;
     ValidController sender_valid_controller_;

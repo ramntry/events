@@ -2,20 +2,25 @@
 #include <list>
 #include <deque>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <core/MetaObject.hpp>
-#include <core/Event.hpp>
 #include <core/EventQueue.hpp>
 
 namespace core {
 
+class Event;
+
 class Object : public MetaObject
 {
 public:
+    struct BadObjectCastException;
+
     struct EventHandler;
     enum ContinuationPolicy { ByHandler = 0, ForceContinue, ForceBreak };
     typedef std::deque<std::pair<EventHandler *, ContinuationPolicy> > ChainOfHandlers;
     typedef std::map<std::string, ChainOfHandlers> EventHandlers;
+
     typedef std::list<Object const *> ChildrenList;
     typedef ChildrenList::iterator ChildIterator;
 
@@ -27,6 +32,11 @@ public:
     Object *parent() const { return parent_; }
     void send(Event *event);
     void post(Event *event);
+
+    template <typename T>
+    T *unsafeCast();
+    template <typename T>
+    T *cast() throw(BadObjectCastException);
 
 protected:
     ChildIterator addChild(Object const *child);
@@ -91,5 +101,28 @@ void Object::popPostHandler()
     delete chain.back().first;
     chain.pop_back();
 }
+
+template <typename T>
+T *Object::unsafeCast()
+{
+    return dynamic_cast<T *>(this);
+}
+
+template <typename T>
+T *Object::cast() throw(BadObjectCastException)
+{
+    T *result = unsafeCast<T>();
+    if (result == 0)
+    {
+        throw BadObjectCastException("dynamic_cast return 0 - invalid target-type");
+    }
+    return result;
+}
+
+struct Object::BadObjectCastException : public std::runtime_error
+{
+    BadObjectCastException(std::string const &message)
+        : std::runtime_error(message) {}
+};
 
 }  // namespace core

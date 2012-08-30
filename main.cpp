@@ -4,7 +4,10 @@
 #include <cars/Mazda.hpp>
 #include <cars/Truck.hpp>
 
-void eventHandlingTest(cars::Mazda *mazda, bool non_blocking)
+using namespace cars;
+using namespace core;
+
+void eventHandlingTest(Mazda *mazda, bool non_blocking)
 {
     mazda->wheels()[1]->punch(non_blocking);
 
@@ -19,19 +22,19 @@ void eventHandlingTest(cars::Mazda *mazda, bool non_blocking)
     if (non_blocking)
     {
         std::cout << "\nprocess all events:\n" << std::endl;
-        core::EventQueue::getInstance()->processAllEvents();
+        EventQueue::processAllEvents();
     }
 }
 
 int main()
 {
-    std::vector<cars::Car *> two_cars;
-    two_cars.push_back(new cars::Mazda(0));
-    two_cars.push_back(new cars::Truck(0));
+    std::vector<Car *> two_cars;
+    two_cars.push_back(new Mazda(0));
+    two_cars.push_back(new Truck(0));
 
     for (int i = 0; i < 2; ++i)
     {
-        cars::Car *curr = two_cars[i];
+        Car *curr = two_cars[i];
         std::cout <<
             "typeid: " << curr->typeName() << '\n' <<
             "number of wheels: " << curr->numberOfWheels() << '\n' <<
@@ -39,7 +42,7 @@ int main()
         std::endl;
     }
 
-    cars::Mazda *mazda = dynamic_cast<cars::Mazda *>(two_cars.front());
+    Mazda *mazda = two_cars.front()->cast<Mazda>();
 
     std::cout << "\n\n=== Blocking test of event handling ===\n" << std::endl;
     eventHandlingTest(mazda, false);
@@ -53,7 +56,15 @@ int main()
     mazda->wheels()[1]->punch(true);
     delete two_cars.front();
     std::cout << "\nAnd now I'm nothing to do, because sender of posted events already is gone" << std::endl;
-    core::EventQueue::getInstance()->processAllEvents();
+    EventQueue::processAllEvents();
+
+    Car::Wheels &truck_wheels = two_cars.back()->wheels();
+    truck_wheels[0]->punch();
+    truck_wheels[1]->punch();
+    truck_wheels[1]->punch(true);
+    truck_wheels[2]->punch(true);
+    truck_wheels[3]->punch(true);
+    truck_wheels[3]->punch();
 
     delete two_cars.back();
 }

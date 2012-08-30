@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <core/EventQueue.hpp>
+#include <core/Event.hpp>
 #include "Object.hpp"
 
 using core::Object;
@@ -98,7 +99,7 @@ void Object::send(core::Event *event)
 
 void Object::post(core::Event *event)
 {
-    valid_iterator_ = EventQueue::getInstance()->enque(event, valid_iterator_);
+    valid_iterator_ = EventQueue::enque(event, valid_iterator_);
 }
 
 void Object::processChainOfHandlers(Object::ChainOfHandlers &chain, core::Event *event)

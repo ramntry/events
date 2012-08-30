@@ -1,6 +1,6 @@
 #pragma once
 #include <deque>
-#include <core/MetaObject.hpp>
+#include <core/Object.hpp>
 
 namespace core {
 
@@ -14,14 +14,13 @@ public:
 
     Event(Object *sender);
 
-    template <typename S>
-    S *sender() const;
-
-    template <typename R>
-    R *receiver() const;
-
     void up();
     void process();
+
+    template <typename S> S *sender() const { return sender_->cast<S>(); }
+    template <typename S> S *tryGetSender() const { return sender_->unsafeCast<S>(); }
+    template <typename R> R *receiver() const { return receiver_->cast<R>(); }
+    template <typename R> R *tryGetReceiver() const { return receiver_->unsafeCast<R>(); }
 
     iterator begin() const;
     iterator end() const;
@@ -33,18 +32,6 @@ protected:
     Object *receiver_;
     EventHierarchy hierarchy_;
 };
-
-template <typename S>
-S *Event::sender() const
-{
-    return dynamic_cast<S *>(sender_);
-}
-
-template <typename R>
-R *Event::receiver() const
-{
-    return dynamic_cast<R *>(receiver_);
-}
 
 #define EVENT_DECL(name, base) \
 class name : public base \

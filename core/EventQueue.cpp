@@ -1,5 +1,7 @@
 #include <core/Object.hpp>
+#include <core/Event.hpp>
 #include "EventQueue.hpp"
+
 
 using core::EventQueue;
 using core::Event;
@@ -12,8 +14,10 @@ core::EventQueue *EventQueue::getInstance()
 
 EventQueue::ValidIterator EventQueue::enque(Event *event, ValidIterator position_assumption)
 {
-    events_.push_back(event);
-    return sender_valid_controller_.insert(position_assumption, event->sender<Object>());
+    EventQueue *mp = getInstance();
+
+    mp->events_.push_back(event);
+    return mp->sender_valid_controller_.insert(position_assumption, event->sender<Object>());
 }
 
 EventQueue::ValidIterator EventQueue::untrackedIterator()
@@ -31,11 +35,13 @@ void EventQueue::excludeFromValid(EventQueue::ValidIterator iterator)
 
 void EventQueue::processAllEvents()
 {
-    EventContainer::iterator it = events_.begin();
-    EventContainer::iterator end = events_.end();
+    EventQueue *mp = getInstance();
+
+    EventContainer::iterator it = mp->events_.begin();
+    EventContainer::iterator end = mp->events_.end();
     for (; it != end; ++it)
     {
-        if (sender_valid_controller_.find((*it)->sender<Object>()) != untrackedIterator())
+        if (mp->sender_valid_controller_.find((*it)->sender<Object>()) != untrackedIterator())
         {
             (*it)->process();
         } else
@@ -43,19 +49,18 @@ void EventQueue::processAllEvents()
             delete *it;
         }
     }
-    deleteAllEvents();
-}
-
-void EventQueue::deleteAllEvents()
-{
-    events_.clear();
+    mp->events_.clear();
 }
 
 EventQueue::~EventQueue()
 {
-    deleteAllEvents();
-}
+    EventQueue *mp = getInstance();
 
-EventQueue::EventQueue()
-{
+    EventContainer::iterator it = mp->events_.begin();
+    EventContainer::iterator end = mp->events_.end();
+    for (; it != end; ++it)
+    {
+        delete *it;
+    }
+    mp->events_.clear();
 }
