@@ -82,7 +82,6 @@ void Object::send(core::Event *event)
         if (find_it != not_found_it && !find_it->second.empty())
         {
             processChainOfHandlers(find_it->second, event);
-            delete event;
             return;
         }
     }
@@ -114,4 +113,5 @@ void Object::processChainOfHandlers(Object::ChainOfHandlers &chain, core::Event 
             break;
         }
     }
+    delete event;
 }

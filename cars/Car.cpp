@@ -2,7 +2,6 @@
 #include "Car.hpp"
 
 using cars::Car;
-using cars::parts::Engine;
 using cars::parts::Wheel;
 
 Car::Car(Object *parent, int power_of_engine)
