@@ -25,8 +25,8 @@ public:
     virtual ~Object();
 
     Object *parent() const { return parent_; }
-    void send(Event const &event);
-    void post(Event const &event);
+    void send(Event *event);
+    void post(Event *event);
 
 protected:
     ChildIterator addChild(Object const *child);
@@ -38,7 +38,7 @@ protected:
     template <typename E, typename H> void pushPostHandler(ContinuationPolicy policy = ByHandler);
     template <typename E> void popPreHandler();
     template <typename E> void popPostHandler();
-    void processChainOfHandlers(ChainOfHandlers &chain, Event const &event);
+    void processChainOfHandlers(ChainOfHandlers &chain, Event *event);
 
     mutable Object *parent_;
     ChildIterator me_in_childrenlist_;
@@ -49,13 +49,13 @@ protected:
 
 struct Object::EventHandler
 {
-    virtual bool operator ()(Event const &event) = 0;
+    virtual bool operator ()(Event *event) = 0;
 };
 
 #define HANDLER_DECL(name) \
 struct name : public core::Object::EventHandler \
 { \
-    virtual bool operator ()(core::Event const &event); \
+    virtual bool operator ()(core::Event *event); \
 }
 
 template <typename E>

@@ -17,7 +17,7 @@ public:
     static EventQueue *getInstance();
     static ValidIterator untrackedIterator();
     static void excludeFromValid(ValidIterator iterator);
-    ValidIterator enque(Event const &event, ValidIterator position_assumption);
+    ValidIterator enque(Event *event, ValidIterator position_assumption);
     void processAllEvents();
     void deleteAllEvents();
 

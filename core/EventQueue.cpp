@@ -10,10 +10,10 @@ core::EventQueue *EventQueue::getInstance()
     return &instance;
 }
 
-EventQueue::ValidIterator EventQueue::enque(Event const &event, ValidIterator position_assumption)
+EventQueue::ValidIterator EventQueue::enque(Event *event, ValidIterator position_assumption)
 {
-    events_.push_back(new Event(event));
-    return sender_valid_controller_.insert(position_assumption, event.sender<Object>());
+    events_.push_back(event);
+    return sender_valid_controller_.insert(position_assumption, event->sender<Object>());
 }
 
 EventQueue::ValidIterator EventQueue::untrackedIterator()
@@ -38,6 +38,9 @@ void EventQueue::processAllEvents()
         if (sender_valid_controller_.find((*it)->sender<Object>()) != untrackedIterator())
         {
             (*it)->process();
+        } else
+        {
+            delete *it;
         }
     }
     deleteAllEvents();
@@ -45,12 +48,6 @@ void EventQueue::processAllEvents()
 
 void EventQueue::deleteAllEvents()
 {
-    EventContainer::iterator it = events_.begin();
-    EventContainer::iterator end = events_.end();
-    for (; it != end; ++it)
-    {
-        delete *it;
-    }
     events_.clear();
 }
 

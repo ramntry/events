@@ -5,7 +5,7 @@ using cars::Car;
 using cars::parts::Engine;
 using cars::parts::Wheel;
 
-Car::Car(core::Object *parent, int power_of_engine)
+Car::Car(Object *parent, int power_of_engine)
     : Object(parent)
     , engine_(this, power_of_engine)
 {
@@ -26,8 +26,8 @@ void Car::addWheel(int diameter)
     wheels_.push_back(new Wheel(this, numberOfWheels(), diameter));
 }
 
-bool Car::BeepBeepHandler::operator ()(core::Event const &event)
+bool Car::BeepBeepHandler::operator ()(core::Event *event)
 {
-    std::cout << event.sender<Object>()->parent()->typeName() << ": beep-beep!" << std::endl;
+    std::cout << event->receiver<Car>()->typeName() << ": beep-beep!" << std::endl;
     return true;
 }

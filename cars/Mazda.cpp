@@ -3,7 +3,6 @@
 
 using cars::Mazda;
 using cars::parts::Wheel;
-using core::Event;
 
 Mazda::Mazda(Object *parent)
     : Car(parent, 200)
@@ -39,14 +38,14 @@ void Mazda::enableBeepBeepWhenWheelEvent()
     beep_beep_when_wheel_event_ = true;
 }
 
-bool Mazda::WheelHandler::operator ()(core::Event const &event)
+bool Mazda::WheelHandler::operator ()(core::Event *event)
 {
-    std::cout << "Mazda: something is wrong with wheel #" << event.sender<Wheel>()->id() << std::endl;
+    std::cout << "Mazda: something is wrong with wheel #" << event->sender<Wheel>()->id() << std::endl;
     return true;
 }
 
-bool Mazda::WheelPuncturedHandler::operator ()(core::Event const &event)
+bool Mazda::WheelPuncturedHandler::operator ()(core::Event *event)
 {
-    std::cout << "Mazda: Wheel #" << event.sender<Wheel>()->id() << " was punctured!" << std::endl;
+    std::cout << "Mazda: Wheel #" << event->sender<Wheel>()->id() << " was punctured!" << std::endl;
     return true;
 }

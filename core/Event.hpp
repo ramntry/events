@@ -17,6 +17,10 @@ public:
     template <typename S>
     S *sender() const;
 
+    template <typename R>
+    R *receiver() const;
+
+    void up();
     void process();
 
     iterator begin() const;
@@ -25,14 +29,21 @@ public:
 protected:
     void push();
 
-    EventHierarchy hierarchy_;
     Object *sender_;
+    Object *receiver_;
+    EventHierarchy hierarchy_;
 };
 
 template <typename S>
 S *Event::sender() const
 {
     return dynamic_cast<S *>(sender_);
+}
+
+template <typename R>
+R *Event::receiver() const
+{
+    return dynamic_cast<R *>(receiver_);
 }
 
 #define EVENT_DECL(name, base) \

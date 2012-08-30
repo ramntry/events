@@ -5,6 +5,7 @@ using core::Event;
 
 Event::Event(core::Object *sender)
     : sender_(sender)
+    , receiver_(sender)
 {
     push();
 }
@@ -26,5 +27,10 @@ Event::iterator Event::end() const
 
 void Event::process()
 {
-    sender_->send(*this);
+    receiver_->send(this);
+}
+
+void Event::up()
+{
+    receiver_ = receiver_->parent();
 }

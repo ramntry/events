@@ -70,10 +70,10 @@ void Object::deleteHandlers()
     handlers_.clear();
 }
 
-void Object::send(const core::Event &event)
+void Object::send(core::Event *event)
 {
-    Event::iterator it = event.begin();
-    Event::iterator end = event.end();
+    Event::iterator it = event->begin();
+    Event::iterator end = event->end();
     EventHandlers::iterator not_found_it = handlers_.end();
     for (; it != end; ++it)
     {
@@ -81,22 +81,27 @@ void Object::send(const core::Event &event)
         if (find_it != not_found_it && !find_it->second.empty())
         {
             processChainOfHandlers(find_it->second, event);
+            delete event;
             return;
         }
     }
 
     if (parent_ != 0)
     {
-        parent_->send(event);
+        event->up();
+        event->process();
+    } else
+    {
+        delete event;
     }
 }
 
-void Object::post(const core::Event &event)
+void Object::post(core::Event *event)
 {
     valid_iterator_ = EventQueue::getInstance()->enque(event, valid_iterator_);
 }
 
-void Object::processChainOfHandlers(Object::ChainOfHandlers &chain, core::Event const &event)
+void Object::processChainOfHandlers(Object::ChainOfHandlers &chain, core::Event *event)
 {
     ChainOfHandlers::iterator it = chain.begin();
     ChainOfHandlers::iterator end = chain.end();
