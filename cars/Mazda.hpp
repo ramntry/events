@@ -14,7 +14,7 @@ public:
     HANDLER_DECL(WheelPuncturedHandler);
 
 protected:
-    bool low_wheel_events_detalisation_mode_is_enabled_;
+    bool low_wheel_events_detalisation_mode_;
     bool beep_beep_when_wheel_event_;
 };
 

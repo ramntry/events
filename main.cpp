@@ -52,6 +52,7 @@ int main()
 
     mazda->wheels()[1]->punch(true);
     delete two_cars.front();
+    std::cout << "\nAnd now I'm nothing to do, because sender of posted events already is gone" << std::endl;
     core::EventQueue::getInstance()->processAllEvents();
 
     delete two_cars.back();
