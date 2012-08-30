@@ -30,15 +30,16 @@ public:
     virtual ~Object();
 
     Object *parent() const { return parent_; }
-    void send(Event *event);
-    void post(Event *event);
 
-    template <typename T>
-    T *unsafeCast();
-    template <typename T>
-    T *cast() throw(BadObjectCastException);
+    void send(Event *event);
+    template <typename E> void send() { send(new E(this)); }
+    template <typename E> void post() { post(new E(this)); }
+
+    template <typename T> T *unsafeCast();
+    template <typename T> T *cast() throw(BadObjectCastException);
 
 protected:
+    void post(Event *event);
     ChildIterator addChild(Object const *child);
     void deleteChildren();
     void deleteHandlers();

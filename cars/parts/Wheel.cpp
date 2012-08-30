@@ -14,9 +14,9 @@ void Wheel::punch(bool non_blocking)
 {
     if (non_blocking)
     {
-        post(new WheelPuncturedEvent(this));
+        post<WheelPuncturedEvent>();
     } else
     {
-        send(new WheelPuncturedEvent(this));
+        send<WheelPuncturedEvent>();
     }
 }
