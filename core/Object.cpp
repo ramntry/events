@@ -86,11 +86,7 @@ void Object::send(core::Event *event)
         }
     }
 
-    if (parent_ != 0)
-    {
-        event->up();
-        event->process();
-    } else
+    if (!event->proceed())
     {
         delete event;
     }

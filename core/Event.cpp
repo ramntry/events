@@ -30,7 +30,17 @@ void Event::process()
     receiver_->send(this);
 }
 
-void Event::up()
+core::Object *Event::up()
 {
-    receiver_ = receiver_->parent();
+    return receiver_ = receiver_->parent();
+}
+
+bool Event::proceed()
+{
+    if (up() == 0)
+    {
+        return false;
+    }
+    process();
+    return true;
 }

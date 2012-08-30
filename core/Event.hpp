@@ -14,8 +14,8 @@ public:
 
     Event(Object *sender);
 
-    void up();
     void process();
+    bool proceed();
 
     template <typename S> S *sender() const { return sender_->cast<S>(); }
     template <typename S> S *tryGetSender() const { return sender_->unsafeCast<S>(); }
@@ -27,6 +27,7 @@ public:
 
 protected:
     void push();
+    Object *up();
 
     Object *sender_;
     Object *receiver_;
